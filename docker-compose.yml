@@ -12,7 +12,7 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     networks:
-      - test-network
+      - traefik-network
 
   backend:
     build:
@@ -28,7 +28,7 @@ services:
     depends_on:
       - postgres
     networks:
-      - test-network
+      - traefik-network
 
   frontend:
     build:
@@ -42,7 +42,7 @@ services:
       - "traefik.http.routers.frontend.entrypoints=web"
       - "traefik.http.services.frontend.loadbalancer.server.port=80"
     networks:
-      - test-network
+      - traefik-network
     environment:
       - VITE_BACKEND_URL=http://localhost/api
 
@@ -55,12 +55,12 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
     networks:
-      - test-network
+      - traefik-network
 
 volumes:
   postgres-data:
 
 
 networks:
-  test-network:
-    driver: bridge
+  traefik-network:
+    external: true
