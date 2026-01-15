@@ -1,3 +1,13 @@
+FROM node:24 AS dev
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+ARG VITE_BACKEND_URL
+ENV VITE_BACKEND_URL=${VITE_BACKEND_URL}
+EXPOSE 5173
+CMD ["sh", "-c", "npm run dev -- --host"]
+
 FROM node:20 AS build
 WORKDIR /app
 COPY package*.json ./

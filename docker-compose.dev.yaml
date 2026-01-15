@@ -18,13 +18,23 @@ services:
     build:
       context: ./Backend
       dockerfile: Dockerfile
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`localhost`) && PathPrefix(`/api`)"
-      - "traefik.http.routers.backend.entrypoints=web"
-      - "traefik.http.services.backend.loadbalancer.server.port=8080"
+      target: dev
     environment:
       - ConnectionStrings__DefaultConnection=Host=postgres;Database=testdb;Username=testuser;Password=testpass
+      - ASPNETCORE_URLS=http://0.0.0.0:8080
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.test-project-backend.rule=Host(`localhost`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.test-project-backend.entrypoints=web"
+      - "traefik.http.services.test-project-backend.loadbalancer.server.port=8080"
+    develop:
+      watch:
+        - action: sync
+          path: ./Backend
+          target: /src
+          ignore:
+            - bin/
+            - obj/
     depends_on:
       - postgres
     networks:
@@ -34,17 +44,25 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      target: dev
       args:
         - VITE_BACKEND_URL=http://localhost/api
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=Host(`localhost`)"
-      - "traefik.http.routers.frontend.entrypoints=web"
-      - "traefik.http.services.frontend.loadbalancer.server.port=80"
-    networks:
-      - test-network
     environment:
       - VITE_BACKEND_URL=http://localhost/api
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.test-project-frontend.rule=Host(`localhost`)"
+      - "traefik.http.routers.test-project-frontend.entrypoints=web"
+      - "traefik.http.services.test-project-frontend.loadbalancer.server.port=5173"
+    develop:
+      watch:
+        - action: sync
+          path: ./frontend
+          target: /app
+          ignore:
+            - node_modules/
+    networks:
+      - test-network
 
   postgres:
     image: postgres:15-alpine
