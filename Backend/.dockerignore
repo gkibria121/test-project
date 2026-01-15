@@ -1,0 +1,24 @@
+# .dockerignore for Backend
+# Exclude build outputs and IDE files
+bin/
+obj/
+.vs/
+TestResults/
+*.user
+*.suo
+*.userprefs
+*.pdb
+*.log
+.vscode/
+
+# Git and Docker config
+.git
+.gitignore
+docker-compose*.yml
+Dockerfile*
+
+# OS files
+.DS_Store
+
+# Secrets
+.env

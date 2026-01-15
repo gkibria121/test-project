@@ -1,0 +1,23 @@
+# .dockerignore for frontend
+# Node and build artifacts
+node_modules
+dist
+build
+.vite
+
+# IDE and OS
+.vscode/
+.DS_Store
+
+# Git and logs
+.git
+.gitignore
+npm-debug.log
+yarn-error.log
+
+# Env files
+.env
+.env.local
+
+# Coverage and temporary files
+coverage
