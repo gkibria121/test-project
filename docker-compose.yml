@@ -34,6 +34,8 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        - VITE_BACKEND_URL=http://localhost/api
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`localhost`)"
@@ -41,6 +43,8 @@ services:
       - "traefik.http.services.frontend.loadbalancer.server.port=80"
     networks:
       - test-network
+    environment:
+      - VITE_BACKEND_URL=http://localhost/api
 
   postgres:
     image: postgres:15-alpine

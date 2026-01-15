@@ -16,6 +16,8 @@ function App() {
 
   // Set this in your env: VITE_BACKEND_URL=http://localhost/api
   const backendUrl = import.meta.env.VITE_BACKEND_URL ?? ''
+  // Fallback to /api so the app works when the env var isn't set (useful in dev)
+  const apiBase = backendUrl || '/api'
 
   useEffect(() => {
     loadForecasts()
@@ -26,8 +28,17 @@ function App() {
     setLoading(true)
     setError(null)
     try {
-      const res = await fetch(`${backendUrl}/weatherforecast`)
-      if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`)
+      const url = `${apiBase.replace(/\/$/, '')}/weatherforecast`
+      const res = await fetch(url)
+      if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText} (${res.url})`)
+
+      const ct = res.headers.get('content-type') || ''
+      if (ct.includes('text/html')) {
+        const text = await res.text()
+        const snippet = text.replace(/\s+/g, ' ').slice(0, 200)
+        throw new Error(`Expected JSON but got HTML from ${res.url}: ${snippet}...`)
+      }
+
       const data = await res.json()
       const mapped: Forecast[] = data.map((d: any) => ({
         date: d.date ?? d.Date ?? d.DateOnly ?? '',
