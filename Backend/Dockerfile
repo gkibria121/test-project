@@ -1,7 +1,10 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS dev
 WORKDIR /src
+COPY ["Backend.csproj", "./"]
+RUN dotnet restore "Backend.csproj"
+COPY . .
 EXPOSE 8080
-CMD ["sh", "-c", "dotnet --info && dotnet restore && dotnet watch run --urls http://0.0.0.0:8080"]
+CMD ["dotnet", "watch", "run", "--urls", "http://0.0.0.0:8080"]
 
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src

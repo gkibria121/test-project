@@ -5,6 +5,7 @@ services:
     build:
       context: ./Backend
       dockerfile: Dockerfile
+      target: final
     labels:
       - "traefik.enable=true" 
       - "traefik.http.routers.test-project-backend.rule=Host(`test-project.gkibria121.com`) && PathPrefix(`/api`)"
@@ -20,6 +21,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      target: final
       args:
         - VITE_BACKEND_URL=https://test-project.gkibria121.com/api
     labels:
