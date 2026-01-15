@@ -43,7 +43,7 @@ jobs:
           script: |
             set -euo pipefail
             cd /home/app/test-project
-            docker compose up -d --build frontend backend
+            docker compose -f docker-compose.yaml -f docker-compose.staging.yaml up  -d --build
       - name: Cleanup Docker system
         if: always()
         uses: appleboy/ssh-action@b0a8f324e192469585a608d1f586061cf28a6571

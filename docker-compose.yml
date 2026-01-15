@@ -1,66 +1,10 @@
-services:
-  traefik:
-    image: traefik:v3.6.7
-    command:
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
-    ports:
-      - "80:80"
-      - "8080:8080"
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-    networks:
-      - traefik-network
-
+services: 
   backend:
     build:
       context: ./Backend
-      dockerfile: Dockerfile
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`localhost`) && PathPrefix(`/api`)"
-      - "traefik.http.routers.backend.entrypoints=web"
-      - "traefik.http.services.backend.loadbalancer.server.port=8080"
-    environment:
-      - ConnectionStrings__DefaultConnection=Host=postgres;Database=testdb;Username=testuser;Password=testpass
-    depends_on:
-      - postgres
-    networks:
-      - traefik-network
-
+      dockerfile: Dockerfile 
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
-      args:
-        - VITE_BACKEND_URL=http://localhost/api
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=Host(`localhost`)"
-      - "traefik.http.routers.frontend.entrypoints=web"
-      - "traefik.http.services.frontend.loadbalancer.server.port=80"
-    networks:
-      - traefik-network
-    environment:
-      - VITE_BACKEND_URL=http://localhost/api
-
-  postgres:
-    image: postgres:15-alpine
-    environment:
-      POSTGRES_USER: testuser
-      POSTGRES_PASSWORD: testpass
-      POSTGRES_DB: testdb
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-    networks:
-      - traefik-network
-
-volumes:
-  postgres-data:
-
-
-networks:
-  traefik-network:
-    external: true
+      dockerfile: Dockerfile 
+ 
