@@ -57,7 +57,7 @@ function App() {
   return (
     <div className="App">
       <header>
-        <h1>Weather Forecast</h1>
+        <h1>Weather Forecast test</h1>
         <p className="muted">Backend URL: <code>{backendUrl || 'unset: set VITE_BACKEND_URL'}</code></p>
         <div className="controls">
           <button onClick={loadForecasts} disabled={loading}>Reload</button>
