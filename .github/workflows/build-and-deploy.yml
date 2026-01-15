@@ -44,17 +44,3 @@ jobs:
             set -euo pipefail
             cd /home/app/test-project
             docker compose -f docker-compose.yaml -f docker-compose.staging.yaml up  -d --build
-      - name: Cleanup Docker system
-        if: always()
-        uses: appleboy/ssh-action@b0a8f324e192469585a608d1f586061cf28a6571
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          port: 22
-          script: |
-            echo "Cleaning up Docker system..."
-            docker container prune -f
-            docker image prune -f
-            docker network prune -f
-            docker builder prune -f --keep-storage 10GB
