@@ -1,0 +1,13 @@
+name: Workflow
+on:
+    push:
+        branches:
+            - main
+            - master
+jobs:
+    build-and-deploy:
+        name: Build and deploy
+        uses: ./.github/workflows/build-and-deploy.yml
+        with:
+            ENVIRONMENT: production
+        secrets: inherit
